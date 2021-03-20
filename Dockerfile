@@ -4,6 +4,8 @@ COPY ./requirements.txt /app/requirements.txt
 
 COPY ./*.py /app/
 
+COPY ./table/*.py /app/table/
+
 COPY ./run.sh /app/run.sh
 
 WORKDIR /app
@@ -14,4 +16,4 @@ ENV TERM=xterm-256color
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-ENTRYPOINT ["./run.sh"]
+ENTRYPOINT ["python", "bs.py", "items.txt"] 

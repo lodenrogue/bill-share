@@ -1,52 +1,58 @@
 import sys
+import argparse
 from bill_share import BillShare
 
 from rich.console import Console
-from rich.table import Table
 
+from table.html_table import HtmlTable
+from table.rich_table import RichTable
 
-def run(item_file, payer1_share_percent):
+def run(item_file, payer1_share_percent, is_plain_text):
 	items = get_items(item_file)
 	bill_share = create_bill_share(items)
-	display(bill_share, payer1_share_percent)
+
+	payer1_amount = bill_share.calculate_share(float(payer1_share_percent))
+	payer2_amount = bill_share.total() - payer1_amount
+
+	payer1 = create_payer("Ambrin", payer1_amount)
+	payer2 = create_payer("Miguel", payer2_amount)
+
+	if is_plain_text:
+		display_html_table(bill_share, payer1, payer2)
+	else:
+		display_rich_table(bill_share, payer1, payer2)
 
 
-def display(bill_share, payer1_share_percent):
-	item_table = create_item_table(bill_share)
-	share_table = create_share_table(bill_share, payer1_share_percent)
+def create_payer(name, amount):
+	return {
+		"name": name,
+		"amount": amount
+	}
+
+
+def display_html_table(bill_share, payer1, payer2):
+	table = HtmlTable(bill_share, payer1, payer2)
+	items = table.create_item_table()
+	share = table.create_share_table()
+
+	print("Items")
+	print("<br/>")
+	print(items)
+	print("<br/><br/>")
+
+	print("Pay")
+	print("<br/>")
+	print(share)
+
+
+def display_rich_table(bill_share, payer1, payer2):
+	table = RichTable(bill_share, payer1, payer2)
+	items = table.create_item_table()
+	share = table.create_share_table()
 
 	console = Console()
-	console.print(item_table)
-	console.print(share_table)
-
-
-def create_share_table(bill_share, payer1_share_percent):
-	percent = float(payer1_share_percent)
-	payer1_share = bill_share.calculate_share(percent)
-	payer2_share = bill_share.total() - payer1_share
-
-	table = Table(title='Pay', show_lines=True)
-	table.add_column('Name', style='cyan', no_wrap=True, width=17)
-	table.add_column('Amount', justify='right', no_wrap=True, width=10)
-
-	table.add_row('Ambrin', '{:.2f}'.format(payer1_share))
-	table.add_row('Miguel', '{:.2f}'.format(payer2_share))
-	return table
-
-
-def create_item_table(bill_share):
-	table = Table(title='Items', show_lines=True)
-	table.add_column('Name', style='cyan', no_wrap=True, width=17)
-	table.add_column('Cost', justify='right', no_wrap=True, width=10)
-
-	for item in bill_share.items:
-		name = item.name
-		cost = '{:.2f}'.format(item.cost)
-		table.add_row(name, cost)
-
-	total = '{:.2f}'.format(bill_share.total())
-	table.add_row('Total', total)
-	return table
+	console.print(items)
+	console.print(share)
 
 
 def create_bill_share(items):
@@ -73,7 +79,14 @@ def get_items(file):
 		return f.readlines()
 
 
+def get_args():
+	parser = argparse.ArgumentParser()
+	parser.add_argument("item_file", help="file containing items")
+	parser.add_argument("share", help="payer 1 share percentage")
+	parser.add_argument("-l", "--html", help="print tables in html", action="store_true")
+	return parser.parse_args()
+
+
 if __name__ == '__main__':
-	item_file = sys.argv[1]
-	bill_share = sys.argv[2]
-	run(item_file, bill_share)
+	args = get_args()
+	run(args.item_file, args.share, args.html)
