@@ -1,29 +1,31 @@
 
-Usage:
+### Usage:
 
 ```sh
 python bs.py <item-file> <payer-1-percent>
 ```
 
-Example:
+### Example:
+
 ```sh
 python bs.py items.txt .45
 ```
 
-Output as html:
+### Output as html:
+
 ```sh
 python bs.py -l items.txt .45
 ```
 
 ---
 
-Build with Docker:
+### Build with Docker:
 
 ```sh
 docker build -t bill-share .
 ```
 
-Run with Docker:
+### Run with Docker:
 
 ```sh
 docker run -v $PWD/<item-file>:/app/items.txt --rm -it bill-share .45
