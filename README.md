@@ -10,6 +10,11 @@ Example:
 python bs.py items.txt .45
 ```
 
+Output as html:
+```sh
+python bs.py -l items.txt .45
+```
+
 ---
 
 Build with Docker:
