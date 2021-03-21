@@ -7,7 +7,7 @@ from rich.console import Console
 from table.html_table import HtmlTable
 from table.rich_table import RichTable
 
-def run(item_file, payer1_share_percent, is_plain_text):
+def run(item_file, payer1_share_percent, is_html):
     items = get_items(item_file)
     bill_share = create_bill_share(items)
 
@@ -17,7 +17,7 @@ def run(item_file, payer1_share_percent, is_plain_text):
     payer1 = create_payer("Ambrin", payer1_amount)
     payer2 = create_payer("Miguel", payer2_amount)
 
-    if is_plain_text:
+    if is_html:
         display_html_table(bill_share, payer1, payer2)
     else:
         display_rich_table(bill_share, payer1, payer2)
