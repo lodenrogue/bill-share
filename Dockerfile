@@ -6,11 +6,7 @@ COPY ./*.py /app/
 
 COPY ./table/*.py /app/table/
 
-COPY ./run.sh /app/run.sh
-
 WORKDIR /app
-
-RUN chmod +x run.sh
 
 ENV TERM=xterm-256color
 

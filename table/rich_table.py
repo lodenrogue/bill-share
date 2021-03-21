@@ -32,5 +32,5 @@ class RichTable():
         payer2_amount = '{:.2f}'.format(self.payer2["amount"])
 
         table.add_row(self.payer1["name"], payer1_amount)
-        table.add_row(self.payer1["name"], payer2_amount)
+        table.add_row(self.payer2["name"], payer2_amount)
         return table
