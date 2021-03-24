@@ -1,10 +1,8 @@
 FROM python:3.6-slim
 
+COPY ./src /app
+
 COPY ./requirements.txt /app/requirements.txt
-
-COPY ./*.py /app/
-
-COPY ./table/*.py /app/table/
 
 WORKDIR /app
 
